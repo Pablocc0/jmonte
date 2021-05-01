@@ -29,7 +29,7 @@ const Login = () => {
 
 
 
-    await axios.post('https://mf-eqtl-api-server.herokuapp.com/login', { user, senha })
+    await axios.post('https://mf-eqtl-api-server.herokuapp.com/login_app', { user, senha })
       .then(res => {
         console.log(res);
         if (res.status == 200) {
