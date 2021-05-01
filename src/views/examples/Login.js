@@ -19,7 +19,7 @@ import {
   Col,
 } from "reactstrap";
 
-const Login: React.FC = () => {
+const Login = () => {
 
   const [user, setUser] = useState('');
   const [senha, setSenha] = useState('');
