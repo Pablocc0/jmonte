@@ -1,6 +1,6 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from 'axios';
-import { setNomeUsuario, login, setIdUsuario, logout } from '../services/auth';
+import { setNomeUsuario, login } from '../services/auth';
 import Loader from "../../components/Loader";
 import { history } from '../../history';
 // reactstrap components
