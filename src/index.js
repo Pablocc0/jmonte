@@ -19,7 +19,7 @@ ReactDOM.render(
       {/* <Route path="/auth/login" render={(props) => <AuthLayout {...props} />} /> */}
       <Route component={AuthLayout} exact path="/auth/login" />
       <PrivateRoute component={AdminLayout} exact path="/admin/index" />
-      <PrivateRoute component={NotFound} exact path="/" />
+      <PrivateRoute component={NotFound} exact path="/" redirect="/auth/login" />
     </Switch>
   </BrowserRouter>,
   document.getElementById("root")
