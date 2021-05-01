@@ -38,7 +38,7 @@ const Login: React.FC = () => {
           //setIdUsuario(res.data.user._id);
           setNomeUsuario(res.data.user);
           console.log(res)
-          //history.push("/admin/index");
+          history.push("/admin/index");
           // window.location.href = '/admin/index';
           setLogedInState(false);
 
