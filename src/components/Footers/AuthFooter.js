@@ -32,14 +32,13 @@ const Login = () => {
                 © {new Date().getFullYear()}{" "}
                 <a
                   className="font-weight-bold ml-1"
-                  href="https://www.creative-tim.com?ref=adr-auth-footer"
-                  target="_blank"
+                  href="#"
                 >
-                  Creative Tim
+                  Pablo Almeida Araújo
                 </a>
               </div>
             </Col>
-            <Col xl="6">
+            {/* <Col xl="6">
               <Nav className="nav-footer justify-content-center justify-content-xl-end">
                 <NavItem>
                   <NavLink
@@ -74,7 +73,7 @@ const Login = () => {
                   </NavLink>
                 </NavItem>
               </Nav>
-            </Col>
+            </Col> */}
           </Row>
         </Container>
       </footer>

@@ -6,25 +6,25 @@ import {
   NavLink,
 } from "reactstrap";
 
-export default class PersonList extends React.Component {
+export default class ProdutoLista extends React.Component {
   state = {
-    persons: []
+    produtos: []
   }
 
   componentDidMount() {
-    axios.get(`https://jsonplaceholder.typicode.com/users`)
+    axios.get(`http://localhost:4000/venda`)
       .then(res => {
-        const persons = res.data;
-        console.log(persons);
-        this.setState({ persons });
+        const produtos = res.data;
+        console.log(produtos);
+        this.setState({ produtos });
       })
   }
 
   render() {
     return (
-      <ul>
-        { this.state.persons.map(person => <li>{person.name}</li>)}
-      </ul>
+      <>
+        { this.state.produtos.map(person => <>{person.nome}</>)}
+      </>
     )
   }
 }

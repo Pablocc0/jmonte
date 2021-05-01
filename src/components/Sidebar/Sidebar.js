@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { NavLink as NavLinkRRD, Link } from "react-router-dom";
-import PersonList from '../PersonList';
 // nodejs library to set properties for components
 import { PropTypes } from "prop-types";
 
@@ -220,8 +219,6 @@ const Sidebar = (props) => {
           <hr className="my-3" />
 
           {/* Heading */}
-          <h6 className="navbar-heading text-muted">Usuários</h6>
-          <PersonList />
           {/* Navigation */}
           {/* <Nav className="mb-md-3" navbar>
             <NavItem>

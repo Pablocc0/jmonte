@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
-
+import React, { useState, useEffect, Component } from "react";
 import axios from 'axios';
+import moment from 'moment';
+// import axios from 'axios';
 // node.js library that concatenates classes (strings)
 import classnames from "classnames";
 // reactstrap components
@@ -33,6 +34,110 @@ import {
 
 import Header from "components/Headers/Header.js";
 
+async function confirmaEntrega(id) {
+  alert(id);
+  var vendedor = localStorage.getItem("&nome-usuario");
+  var _id = id;
+  var statusentrega = "Entrege";
+
+
+  await axios.put('http://localhost:4000/venda', { _id, vendedor, statusentrega })
+    .then(res => {
+      console.log(res);
+    })
+}
+
+
+class ProdutoLista extends React.Component {
+
+  state = {
+    produtos: []
+  }
+
+  componentDidMount() {
+    axios.get(`http://localhost:4000/venda`)
+      .then(res => {
+        const produtos = res.data;
+        console.log(produtos);
+        this.setState({ produtos });
+      })
+  }
+
+
+
+  render() {
+    return (
+      <>
+        { this.state.produtos.map(person =>
+          <tr>
+            <th scope="row">
+              <Media className="align-items-center">
+                <Media>
+                  <span className="mb-0 text-sm">
+                    {person.nome}
+                  </span>
+                </Media>
+              </Media>
+            </th>
+            <td>{person.numerodoc}</td>
+            <td>
+              {person.statusentrega == "Aguardando" ?
+                <Badge color="danger" className="badge-dot mr-4">
+                  <i className="bg-danger" />
+                  {person.statusentrega}
+                </Badge>
+                :
+                <Badge color="success" className="badge-dot mr-4">
+                  <i className="bg-success" />
+                  {person.statusentrega}
+                </Badge>
+              }
+
+            </td>
+            <td>
+              <Badge color="success" href="#pablo"
+                onClick={e => e.preventDefault(alert('Produto entregue com sucesso!'))} >
+                <i className="bg-success" />
+
+                {moment(person.createdAt).format('DD-MM-YYYY')}
+              </Badge>
+            </td>
+            <td className="text-right">
+              <UncontrolledDropdown>
+                <DropdownToggle
+                  className="btn-icon-only text-light"
+                  href="#"
+                  role="button"
+                  size="sm"
+                  color=""
+                  onClick={(e) => e.preventDefault()}
+                >
+                  <i className="fas fa-ellipsis-v" />
+                </DropdownToggle>
+                <DropdownMenu className="dropdown-menu-arrow" right>
+                  <DropdownItem
+                    href="#"
+                    onClick={(e) => e.preventDefault(confirmaEntrega(person._id))}
+                  >
+                    Confirmar Entregua
+          </DropdownItem>
+                  <DropdownItem
+                    href="#"
+                    onClick={(e) => e.preventDefault()}
+                  >
+                    Cancelar
+          </DropdownItem>
+                </DropdownMenu>
+              </UncontrolledDropdown>
+            </td>
+          </tr>
+        )}
+      </>
+    )
+  }
+
+}
+
 const Index = (props) => {
   const [activeNav, setActiveNav] = useState(1);
   const [chartExample1Data, setChartExample1Data] = useState("data1");
@@ -42,6 +147,24 @@ const Index = (props) => {
     setActiveNav(index);
     setChartExample1Data("data" + index);
   };
+
+  const [entrega, setEntrega] = useState([]);
+
+  function updateEntrega({ target }, index) {
+    const itensCopy = Array.from(entrega);
+    itensCopy.splice(index, 1, { id: index, value: target.value });
+    setEntrega(itensCopy);
+  }
+
+  function deleteEntrega(index) {
+    const itensCopy = Array.from(entrega);
+    itensCopy.splice(index, 1);
+    setEntrega(itensCopy);
+  }
+
+
+
+
 
 
   return (
@@ -60,209 +183,15 @@ const Index = (props) => {
                 <thead className="thead-light">
                   <tr>
                     <th scope="col">Nome do Cliente</th>
-                    <th scope="col">Descrição do Produto</th>
+                    <th scope="col">Número do documento</th>
                     <th scope="col">Status da venda</th>
-                    <th scope="col">Status da entrega</th>
+                    <th scope="col">Data da venda</th>
                     <th scope="col" />
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <th scope="row">
-                      <Media className="align-items-center">
-                        <a
-                          className="avatar rounded-circle mr-3"
-                          href="#pablo"
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          <img
-                            alt="..."
-                            src={
-                              require("../assets/img/theme/bootstrap.jpg")
-                                .default
-                            }
-                          />
-                        </a>
-                        <Media>
-                          <span className="mb-0 text-sm">
-                            Josenilson
-                          </span>
-                        </Media>
-                      </Media>
-                    </th>
-                    <td>Chuveiro Eletrico</td>
-                    <td>
-                      <Badge color="success" className="badge-dot mr-4">
-                        <i className="bg-success" />
-                        Finalizado
-                      </Badge>
-                    </td>
-                    <td>
-                      <Badge color="success" href="#pablo"
-                        onClick={e => e.preventDefault(alert('Produto entregue com sucesso!'))} >
-                        <i className="bg-success" />
-                        Entregue
-                      </Badge>
-                    </td>
-                    <td className="text-right">
-                      <UncontrolledDropdown>
-                        <DropdownToggle
-                          className="btn-icon-only text-light"
-                          href="#pablo"
-                          role="button"
-                          size="sm"
-                          color=""
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          <i className="fas fa-ellipsis-v" />
-                        </DropdownToggle>
-                        <DropdownMenu className="dropdown-menu-arrow" right>
-                          <DropdownItem
-                            href="#pablo"
-                            onClick={(e) => e.preventDefault()}
-                          >
-                            Confirmar Entregua
-                          </DropdownItem>
-                          <DropdownItem
-                            href="#pablo"
-                            onClick={(e) => e.preventDefault()}
-                          >
-                            Cancelar
-                          </DropdownItem>
-                        </DropdownMenu>
-                      </UncontrolledDropdown>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">
-                      <Media className="align-items-center">
-                        <a
-                          className="avatar rounded-circle mr-3"
-                          href="#pablo"
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          <img
-                            alt="..."
-                            src={
-                              require("../assets/img/theme/bootstrap.jpg")
-                                .default
-                            }
-                          />
-                        </a>
-                        <Media>
-                          <span className="mb-0 text-sm">
-                            Abnoan
-                          </span>
-                        </Media>
-                      </Media>
-                    </th>
-                    <td>Tinta Suvinil</td>
-                    <td>
-                      <Badge color="" className="badge-dot mr-4">
-                        <i className="bg-success" />
-                        Finalizado
-                      </Badge>
-                    </td>
-                    <td>
-                      <Badge color="warning" >
-                        <i className="bg-warning" />
-                        Pendente
-                      </Badge>
-                    </td>
-                    <td className="text-right">
-                      <UncontrolledDropdown>
-                        <DropdownToggle
-                          className="btn-icon-only text-light"
-                          href="#pablo"
-                          role="button"
-                          size="sm"
-                          color=""
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          <i className="fas fa-ellipsis-v" />
-                        </DropdownToggle>
-                        <DropdownMenu className="dropdown-menu-arrow" right>
-                          <DropdownItem
-                            href="#pablo"
-                            onClick={(e) => e.preventDefault()}
-                          >
-                            Confirmar Entregua
-                          </DropdownItem>
-                          <DropdownItem
-                            href="#pablo"
-                            onClick={(e) => e.preventDefault()}
-                          >
-                            Cancelar
-                          </DropdownItem>
-                        </DropdownMenu>
-                      </UncontrolledDropdown>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">
-                      <Media className="align-items-center">
-                        <a
-                          className="avatar rounded-circle mr-3"
-                          href="#pablo"
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          <img
-                            alt="..."
-                            src={
-                              require("../assets/img/theme/bootstrap.jpg")
-                                .default
-                            }
-                          />
-                        </a>
-                        <Media>
-                          <span className="mb-0 text-sm">
-                            Marley
-                          </span>
-                        </Media>
-                      </Media>
-                    </th>
-                    <td>Furadeira Bosch</td>
-                    <td>
-                      <Badge color="" className="badge-dot mr-4">
-                        <i className="bg-danger" />
-                        Aguardando
-                      </Badge>
-                    </td>
-                    <td>
-                      <Badge color="warning" >
-                        <i className="bg-warning" />
-                        Pendente
-                      </Badge>
-                    </td>
-                    <td className="text-right">
-                      <UncontrolledDropdown>
-                        <DropdownToggle
-                          className="btn-icon-only text-light"
-                          href="#pablo"
-                          role="button"
-                          size="sm"
-                          color=""
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          <i className="fas fa-ellipsis-v" />
-                        </DropdownToggle>
-                        <DropdownMenu className="dropdown-menu-arrow" right>
-                          <DropdownItem
-                            href="#pablo"
-                            onClick={(e) => e.preventDefault()}
-                          >
-                            Confirmar Entregua
-                          </DropdownItem>
-                          <DropdownItem
-                            href="#pablo"
-                            onClick={(e) => e.preventDefault()}
-                          >
-                            Cancelar
-                          </DropdownItem>
-                        </DropdownMenu>
-                      </UncontrolledDropdown>
-                    </td>
-                  </tr>
+                  <ProdutoLista />
+
                 </tbody>
               </Table>
               <CardFooter className="py-4">
