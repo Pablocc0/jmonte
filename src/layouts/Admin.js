@@ -28,6 +28,7 @@ const Admin = (props) => {
             component={prop.component}
             key={key}
           />
+
         );
       } else {
         return null;
@@ -62,6 +63,7 @@ const Admin = (props) => {
         <AdminNavbar
           {...props}
           brandText={getBrandText(props.location.pathname)}
+
         />
         <Switch>
           {getRoutes(routes)}

@@ -3,11 +3,14 @@ import axios from 'axios';
 import { setNomeUsuario, login } from '../services/auth';
 import Loader from "../../components/Loader";
 import { history } from '../../history';
+
+import { ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
+
 // reactstrap components
 import {
   Button,
   Card,
-  CardHeader,
   CardBody,
   FormGroup,
   Form,
@@ -15,46 +18,56 @@ import {
   InputGroupAddon,
   InputGroupText,
   InputGroup,
-  Row,
-  Col,
+  Col
 } from "reactstrap";
 
 const Login = () => {
 
-  const [user, setUser] = useState('');
-  const [senha, setSenha] = useState('');
+  const [usuario, setUsuario] = useState('');
+  const [senha, setPassword] = useState('');
   const [logedInState, setLogedInState] = useState(false);
+
+
+  function handleError() {
+    toast.error('Falha de conexão');
+  }
+  function handleSuccess() {
+    toast.success('Login efetuado com sucesso!');
+  }
+  function handleWarn() {
+    toast.warn('Senha inválida');
+  }
 
   async function handleSubmit() {
 
+    const loja = "00";
 
-
-    await axios.post('https://mf-eqtl-api-server.herokuapp.com/login_app', { user, senha })
+    await axios.post('https://nortelink.com.br/api/v1/login', { usuario, senha, loja })
       .then(res => {
-        console.log(res);
-        if (res.status == 200) {
+        //console.log(res);
+        if (res.data.status === 1) {
+          handleSuccess();
           // salvar em local storage
           login(res.data.token);
-          //setIdUsuario(res.data.user._id);
-          setNomeUsuario(res.data.user);
-          console.log(res)
-          history.push("/admin/index");
-          // window.location.href = '/admin/index';
+          setNomeUsuario(res.data.user.name);
+          history.push('/admin/index');
+          //window.location.href = '/admin/index';
           setLogedInState(false);
 
-
-        } else if (res.status == 400) {
-          if (res.data.status == 2) {
-            alert('Senha inválida!');
-          }
+        } else if (res.data.status === 2) {
+          handleWarn();
           setLogedInState(false);
         }
         else {
-          alert('Erro no servidor!');
-
+          handleError();
           setLogedInState(false);
         }
       })
+      .catch(error => {
+        handleError();
+        // this.setState({ erro: error.message });
+        console.error('Algo errado ocorreu!', error);
+      });
   }
 
   function loadSubmit() {
@@ -69,6 +82,7 @@ const Login = () => {
     <>
       <Col lg="5" md="7">
         <Card className="bg-secondary shadow border-0">
+          <ToastContainer />
           <CardBody className="px-lg-5 py-lg-5">
             <div className="text-center text-muted mb-4">
               <small>Acesse usando suas credenciais</small>
@@ -85,7 +99,7 @@ const Login = () => {
                     placeholder="Usuário"
                     type="text"
                     name="user"
-                    onChange={e => setUser(e.target.value)}
+                    onChange={e => setUsuario(e.target.value)}
                   />
                 </InputGroup>
               </FormGroup>
@@ -100,7 +114,7 @@ const Login = () => {
                     placeholder="Password"
                     type="password"
                     name="password"
-                    onChange={e => setSenha(e.target.value)}
+                    onChange={e => setPassword(e.target.value)}
                   />
                 </InputGroup>
               </FormGroup>

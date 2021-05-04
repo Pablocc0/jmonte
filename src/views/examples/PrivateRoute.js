@@ -1,5 +1,5 @@
 import React from 'react';
-import Log, { NOME_USUARIO } from '../services/auth';
+import { NOME_USUARIO } from '../services/auth';
 import { Route, Redirect } from 'react-router';
 
 const PrivateRoute = props => {
